@@ -2,31 +2,53 @@
 
 Este tutorial explica cómo generar claves RSA, subirlas a un servidor (VM) y a GitHub, configurar `ssh-agent` para gestionarlas, y usar un archivo `config` para simplificar las conexiones.
 
+
+> [!NOTE] 
+> Si solo necesitas un **único par de claves SSH** (por ejemplo, solo para GitHub o solo para tu VM), **no es necesario usar el archivo `config` ni `ssh-agent`**.  
+>
+> Este documento está orientado a un escenario más avanzado donde se crean **dos claves diferentes** (por ejemplo, una para GitHub y otra para una VM) y se necesita gestionarlas correctamente en Windows.
+
+Este tutorial explica cómo generar claves RSA, subirlas a una VM y a GitHub, configurar `ssh-agent` para gestionarlas y usar un archivo `config` para simplificar las conexiones SSH.
+
+
 # Índice
 
+- [Requisitos previos](#requisitos-previos)
 - [1️⃣ Conceptos básicos](#1️⃣-conceptos-básicos)
-- [2️⃣ Crear claves RSA](#2️⃣-crear-claves-rsa)
-  - [Para la VM](#para-la-vm)
-  - [Para GitHub](#para-github)
+- [2️⃣ Generar claves RSA](#2️⃣-generar-claves-rsa)
+  - [🟦 Generar clave RSA en Git Bash (Linux)](#-generar-clave-rsa-en-git-bash-linux)
+    - [**Para la VM**](#para-la-vm)
+    - [**Para GitHub**](#para-github)
+  - [🟪 Generar clave RSA en Windows PowerShell](#-generar-clave-rsa-en-windows-powershell)
+    - [**Para la VM**](#para-la-vm-1)
+    - [**Para GitHub**](#para-github-1)
 - [3️⃣ Subir la clave pública al servidor o servicio](#3️⃣-subir-la-clave-pública-al-servidor-o-servicio)
-  - [Para la VM](#para-la-vm-1)
-    - [En la VM, tenemos que instalar ssh:](#en-la-vm-tenemos-que-instalar-ssh)
-    - [En Windows:](#en-windows)
-  - [Para GitHub](#para-github-1)
+  - [Para la VM](#para-la-vm-2)
+    - [1. Asegurar la instalación de SSH en la VM](#1-asegurar-la-instalación-de-ssh-en-la-vm)
+    - [2. Subir clave desde Git Bash](#2-subir-clave-desde-git-bash)
+  - [Para GitHub](#para-github-2)
 - [4️⃣ Configurar ssh-agent](#4️⃣-configurar-ssh-agent)
   - [Iniciar el ssh-agent como servicio de Windows](#iniciar-el-ssh-agent-como-servicio-de-windows)
   - [Añadir las claves al agente](#añadir-las-claves-al-agente)
   - [Verificar las claves cargadas](#verificar-las-claves-cargadas)
 - [5️⃣ Crear el archivo de configuración config](#5️⃣-crear-el-archivo-de-configuración-config)
   - [Contenido de ejemplo](#contenido-de-ejemplo)
-  - [Explicación:](#explicación)
+  - [Explicación](#explicación)
 - [6️⃣ Probar las conexiones](#6️⃣-probar-las-conexiones)
   - [Con la VM](#con-la-vm)
   - [Con GitHub](#con-github)
 - [7️⃣ Integración con Visual Studio](#7️⃣-integración-con-visual-studio)
 
-
 <br>
+
+## Requisitos previos
+
+- Tener instalado OpenSSH
+  - **Linux/macOS**: viene instalado por defecto.
+  - **Windows 10/11**: instalar **Git Bash**.
+- Tener acceso:
+  - A tu cuenta de **GitHub**
+  - Una **VM** con usuario e IP pública
 
 ## 1️⃣ Conceptos básicos
 
@@ -44,13 +66,17 @@ Antes de comenzar, conviene entender algunos conceptos:
 
 - **Alias de host**: un nombre corto que usamos para referirnos a un host remoto (por ejemplo `mi-vm` en lugar de `usuario@ip`).
 
+## 2️⃣ Generar claves RSA
 
+> [!IMPORTANT]  
+> Puedes generar claves desde Git Bash o PowerShell.  
+> Elige un método y síguelo completo.
 
-## 2️⃣ Crear claves RSA
+### 🟦 Generar clave RSA en Git Bash (Linux)
 
-Abrimos Git Bash y generamos las claves.
+Git Bash usa sintaxis tipo Linux.
 
-### Para la VM
+#### **Para la VM**
 
 ```bash
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_vm
@@ -70,51 +96,78 @@ Se generan:
 
 - ~/.ssh/id_rsa_vm.pub → clave pública
 
-### Para GitHub
+#### **Para GitHub**
 
 ```bash
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_github
 ```
 
-Tener claves separadas para cada host es más seguro y permite gestionarlas de forma independiente.
+<br>
+
+### 🟪 Generar clave RSA en Windows PowerShell
+
+#### **Para la VM**
+
+```powershell
+ssh-keygen -t rsa -b 4096 -f "$env:USERPROFILE\.ssh\id_rsa_vm"
+```
+
+#### **Para GitHub**
+
+```powershell
+ssh-keygen -t rsa -b 4096 -f "$env:USERPROFILE\.ssh\id_rsa_github"
+```
+
+<br>
 
 ## 3️⃣ Subir la clave pública al servidor o servicio
 
 ### Para la VM
 
 > [!NOTE]
-> Utilizaremos **Git Bash** para poder usar el comando de copiado de clave a máquina, ya que este comando no existe en Windows.
+> `ssh-copy-id` no existe de forma nativa en PowerShell, por lo que se recomienda usar Git Bash o copiar manualmente.
 
-#### En la VM, tenemos que instalar ssh:
+#### 1. Asegurar la instalación de SSH en la VM
 
 ```bash
 sudo apt update
 sudo apt install ssh
 ```
 
-#### En Windows:
-
-Si ssh-copy-id está disponible:
+#### 2. Subir clave desde Git Bash
 
 ```bash
 ssh-copy-id -i ~/.ssh/id_rsa_vm.pub usuario@IP_DE_LA_VM
 ```
 
-Si no, copiar manualmente el contenido de `id_rsa_vm.pub` al archivo `~/.ssh/authorized_keys` en la VM.
+<br>
+
+Alternativa desde PowerShell (manual)
+
+1. Mostrar la clave:
+
+    ```powershell
+    Get-Content "$env:USERPROFILE\.ssh\id_rsa_vm.pub"
+    ```
+2. Pegarla en la VM dentro de `~/.ssh/authorized_keys`.
 
 ### Para GitHub
 
-1. Copiar la clave pública:
+1. Obtener la clave pública:
+   
+   **Powershell**
+
+    ```powershell
+    cat $env:USERPROFILE\.ssh\id_rsa_github.pub | Set-Clipboard
+    ```
+
+    **Git Bash**
 
     ```bash
-    # en Powershell
-    cat $env:USERPROFILE\.ssh\id_rsa_github.pub | Set-Clipboard
-
-    # en Git Bash
     cat ~/.ssh/id_rsa_github.pub
     ```
 
-2. En GitHub, ir a Settings → SSH and GPG keys → New SSH key
+2. En GitHub, ir a `Settings → SSH and GPG keys → New SSH key`
 
 3. Pegar la clave y guardar.
 
@@ -125,27 +178,27 @@ Si no, copiar manualmente el contenido de `id_rsa_vm.pub` al archivo `~/.ssh/aut
 
 ### Iniciar el ssh-agent como servicio de Windows
 
-```bash
+```powershell
 Start-Service ssh-agent
 Set-Service -Name ssh-agent -StartupType Automatic
 ```
 
 ### Añadir las claves al agente
 
-```bash
+```powershell
 ssh-add C:\Users\TU_USUARIO\.ssh\id_rsa_vm
 ssh-add C:\Users\TU_USUARIO\.ssh\id_rsa_github
 ```
 
 ### Verificar las claves cargadas
 
-```bash
+```powershell
 ssh-add -l
 ```
 
-Salida de ejemplo:
+Salida esperada:
 
-```bash
+```powershell
 4096 SHA256:xxxx id_rsa_vm (RSA)
 4096 SHA256:xxxx id_rsa_github (RSA)
 ```
@@ -155,9 +208,9 @@ Con `ssh-agent` puedes gestionar varias claves y SSH seleccionará la correcta s
 ## 5️⃣ Crear el archivo de configuración config
 
 > [!NOTE]
-> Para GitHub no usaremos alias, ya que habría que modificar el comando de clonación por SSH cuando queramos clonar un repositorio. Nada práctico.
+> No hacemos alias para GitHub porque rompería las URLs SSH de los repos
 
-Ubicación: `C:\Users\TU_USUARIO\.ssh\config`
+📌 Ubicación del archivo: `C:\Users\TU_USUARIO\.ssh\config`
 
 ### Contenido de ejemplo
 
@@ -176,7 +229,7 @@ Host github.com
     IdentitiesOnly yes
 ```
 
-### Explicación:
+### Explicación
 
 - `Host vm-example` → alias que usarás en SSH (`ssh vm-example`)
 
@@ -187,7 +240,7 @@ Host github.com
 - `IdentityFile` → ruta de la clave privada a usar
 
 - `IdentitiesOnly yes` → fuerza a SSH a usar solo la clave indicada
-- 
+-
 
 ## 6️⃣ Probar las conexiones
 
@@ -203,7 +256,7 @@ ssh vm-example
 ssh -T git@github.com
 ```
 
-Ambos deberían responder algo como:
+Salida esperada en GitHub:
 
 ```bash
 Hi USERNAME! You've successfully authenticated...
@@ -211,11 +264,10 @@ Hi USERNAME! You've successfully authenticated...
 
 ## 7️⃣ Integración con Visual Studio
 
-- Visual Studio usa `ssh-agent` y `ssh.exe` de Windows.
+- Visual Studio usa el SSH integrado de Windows.
 
-- Mientras las claves estén cargadas en el agente y el `config` esté correcto, Visual Studio puede conectarse **sin pedir passphrase**.
+- Mientras las claves estén en el `ssh-agent` y el `config` esté bien configurado:
 
-- Esto funciona incluso si cierras Git Bash o PowerShell, porque el agente corre como servicio.
-
-<br>
-
+  - ✓ No pedirá passphrase
+  - ✓ Funcionará Git con SSH
+  - ✓ No importa si cierras PowerShell o Git Bash
