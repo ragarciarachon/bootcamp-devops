@@ -16,8 +16,8 @@ Este tutorial explica cómo generar claves RSA, subirlas a una VM y a GitHub, co
 - [0️⃣ Requisitos previos](#0️⃣-requisitos-previos)
 - [1️⃣ Conceptos básicos](#1️⃣-conceptos-básicos)
 - [2️⃣ Generar claves RSA](#2️⃣-generar-claves-rsa)
-  - [🟦 Generar clave RSA en Git Bash (Linux)](#-generar-clave-rsa-en-git-bash-linux)
-  - [🟪 Generar clave RSA en Windows PowerShell](#-generar-clave-rsa-en-windows-powershell)
+  - [🔑 Generar clave RSA en Git Bash (Linux)](#-generar-clave-rsa-en-git-bash-linux)
+  - [🔑 Generar clave RSA en Windows PowerShell](#-generar-clave-rsa-en-windows-powershell)
 - [3️⃣ Subir la clave pública al servidor o servicio](#3️⃣-subir-la-clave-pública-al-servidor-o-servicio)
   - [Para la VM](#para-la-vm-2)
   - [Para GitHub](#para-github-2)
@@ -83,7 +83,7 @@ Antes de comenzar, conviene entender algunos conceptos:
 > Puedes generar claves desde Git Bash o PowerShell.  
 > Elige un método y síguelo completo.
 
-### 🟦 Generar clave RSA en Git Bash (Linux)
+### 🔑 Generar clave RSA en Git Bash (Linux)
 
 Git Bash usa sintaxis tipo Linux.
 
@@ -115,7 +115,7 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_github
 
 <br>
 
-### 🟪 Generar clave RSA en Windows PowerShell
+### 🔑 Generar clave RSA en Windows PowerShell
 
 #### Para la VM
 
