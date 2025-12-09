@@ -10,6 +10,8 @@ Este tutorial explica cómo generar claves RSA, subirlas a un servidor (VM) y a 
   - [Para GitHub](#para-github)
 - [3️⃣ Subir la clave pública al servidor o servicio](#3️⃣-subir-la-clave-pública-al-servidor-o-servicio)
   - [Para la VM](#para-la-vm-1)
+    - [En la VM, tenemos que instalar ssh:](#en-la-vm-tenemos-que-instalar-ssh)
+    - [En Windows:](#en-windows)
   - [Para GitHub](#para-github-1)
 - [4️⃣ Configurar ssh-agent](#4️⃣-configurar-ssh-agent)
   - [Iniciar el ssh-agent como servicio de Windows](#iniciar-el-ssh-agent-como-servicio-de-windows)
@@ -82,6 +84,15 @@ Tener claves separadas para cada host es más seguro y permite gestionarlas de f
 
 > [!NOTE]
 > Utilizaremos **Git Bash** para poder usar el comando de copiado de clave a máquina, ya que este comando no existe en Windows.
+
+#### En la VM, tenemos que instalar ssh:
+
+```bash
+sudo apt update
+sudo apt install ssh
+```
+
+#### En Windows:
 
 Si ssh-copy-id está disponible:
 
