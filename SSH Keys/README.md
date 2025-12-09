@@ -13,19 +13,13 @@ Este tutorial explica cómo generar claves RSA, subirlas a una VM y a GitHub, co
 
 # Índice
 
-- [Requisitos previos](#requisitos-previos)
+- [0️⃣ Requisitos previos](#0️⃣-requisitos-previos)
 - [1️⃣ Conceptos básicos](#1️⃣-conceptos-básicos)
 - [2️⃣ Generar claves RSA](#2️⃣-generar-claves-rsa)
   - [🟦 Generar clave RSA en Git Bash (Linux)](#-generar-clave-rsa-en-git-bash-linux)
-    - [**Para la VM**](#para-la-vm)
-    - [**Para GitHub**](#para-github)
   - [🟪 Generar clave RSA en Windows PowerShell](#-generar-clave-rsa-en-windows-powershell)
-    - [**Para la VM**](#para-la-vm-1)
-    - [**Para GitHub**](#para-github-1)
 - [3️⃣ Subir la clave pública al servidor o servicio](#3️⃣-subir-la-clave-pública-al-servidor-o-servicio)
   - [Para la VM](#para-la-vm-2)
-    - [1. Asegurar la instalación de SSH en la VM](#1-asegurar-la-instalación-de-ssh-en-la-vm)
-    - [2. Subir clave desde Git Bash](#2-subir-clave-desde-git-bash)
   - [Para GitHub](#para-github-2)
 - [4️⃣ Configurar ssh-agent](#4️⃣-configurar-ssh-agent)
   - [Iniciar el ssh-agent como servicio de Windows](#iniciar-el-ssh-agent-como-servicio-de-windows)
@@ -41,14 +35,31 @@ Este tutorial explica cómo generar claves RSA, subirlas a una VM y a GitHub, co
 
 <br>
 
-## Requisitos previos
+## 0️⃣ Requisitos previos
 
 - Tener instalado OpenSSH
   - **Linux/macOS**: viene instalado por defecto.
-  - **Windows 10/11**: instalar **Git Bash**.
+  - **Windows 10/11**: instalar OpenSSH Client si fuera necesario o usar **Git Bash**.
 - Tener acceso:
   - A tu cuenta de **GitHub**
   - Una **VM** con usuario e IP pública
+
+> [!IMPORTANT]
+> En Windows 10 y 11, OpenSSH **Client** viene incluido pero no siempre habilitado.  
+> - Solo necesitas **OpenSSH Client** para este tutorial (para conectarte a GitHub o a tu VM).  
+> - **OpenSSH Server** no es necesario a menos que quieras que tu Windows reciba conexiones SSH.
+>
+> Para comprobar si el Client está instalado, abre PowerShell como administrador y ejecuta:
+>
+> ```powershell
+> Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*'
+> ```
+>
+> Si no está instalado, habilítalo con:
+>
+> ```powershell
+> Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+> ```
 
 ## 1️⃣ Conceptos básicos
 
@@ -82,19 +93,19 @@ Git Bash usa sintaxis tipo Linux.
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_vm
 ```
 
-- -t rsa → tipo de clave RSA
+- `-t rsa` → tipo de clave RSA
 
-- -b 4096 → tamaño de la clave
+- `-b 4096` → tamaño de la clave
 
-- -f ~/.ssh/id_rsa_vm → ruta de la clave privada
+- `-f ~/.ssh/id_rsa_vm` → ruta de la clave privada
 
-- Se puede añadir una passphrase para mayor seguridad
+- Se puede añadir una **passphrase** para mayor seguridad
 
 Se generan:
 
-- ~/.ssh/id_rsa_vm → clave privada
+- `~/.ssh/id_rsa_vm` → clave privada
 
-- ~/.ssh/id_rsa_vm.pub → clave pública
+- `~/.ssh/id_rsa_vm.pub` → clave pública
 
 #### **Para GitHub**
 
@@ -106,13 +117,13 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_github
 
 ### 🟪 Generar clave RSA en Windows PowerShell
 
-#### **Para la VM**
+#### Para la VM
 
 ```powershell
 ssh-keygen -t rsa -b 4096 -f "$env:USERPROFILE\.ssh\id_rsa_vm"
 ```
 
-#### **Para GitHub**
+#### Para GitHub
 
 ```powershell
 ssh-keygen -t rsa -b 4096 -f "$env:USERPROFILE\.ssh\id_rsa_github"
@@ -125,16 +136,18 @@ ssh-keygen -t rsa -b 4096 -f "$env:USERPROFILE\.ssh\id_rsa_github"
 ### Para la VM
 
 > [!NOTE]
-> `ssh-copy-id` no existe de forma nativa en PowerShell, por lo que se recomienda usar Git Bash o copiar manualmente.
+> `ssh-copy-id` no existe de forma nativa en PowerShell, por lo que se recomienda usar **Git Bash** o copiar manualmente.
 
-#### 1. Asegurar la instalación de SSH en la VM
+#### 1. Asegurar la instalación de SSH dentro de la VM
 
 ```bash
+# se ejecutan dentro de la VM
+
 sudo apt update
 sudo apt install ssh
 ```
 
-#### 2. Subir clave desde Git Bash
+#### 2. Subir clave desde **Git Bash**
 
 ```bash
 ssh-copy-id -i ~/.ssh/id_rsa_vm.pub usuario@IP_DE_LA_VM
@@ -142,18 +155,21 @@ ssh-copy-id -i ~/.ssh/id_rsa_vm.pub usuario@IP_DE_LA_VM
 
 <br>
 
-Alternativa desde PowerShell (manual)
+#### Alternativa desde PowerShell (manual)
 
-1. Mostrar la clave:
+1. Copiar la clave pública:
 
     ```powershell
-    Get-Content "$env:USERPROFILE\.ssh\id_rsa_vm.pub"
+    Get-Content "$env:USERPROFILE\.ssh\id_rsa_vm.pub" | Set-Clipboard
     ```
-2. Pegarla en la VM dentro de `~/.ssh/authorized_keys`.
+2. Pegarla en la VM dentro de `~/.ssh/authorized_keys`. Si la carpeta no existe, créala.
+
+> [!TIP]
+> Para poder copiar y pegar entre local y VM, habilita el portapapeles compartido (`Configuración > Interfaz de usuario > Dispositivos > Portapapeles compartido`).
 
 ### Para GitHub
 
-1. Obtener la clave pública:
+1. Copiar la clave pública:
    
    **Powershell**
 
