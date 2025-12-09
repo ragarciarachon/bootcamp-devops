@@ -127,7 +127,7 @@ Si no, copiar manualmente el contenido de `id_rsa_vm.pub` al archivo `~/.ssh/aut
 
 ```bash
 Start-Service ssh-agent
-Set-Service -StartupType Automatic
+Set-Service -Name ssh-agent -StartupType Automatic
 ```
 
 ### Añadir las claves al agente
