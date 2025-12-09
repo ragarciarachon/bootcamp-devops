@@ -48,7 +48,7 @@ Antes de comenzar, conviene entender algunos conceptos:
 
 ## 2️⃣ Crear claves RSA
 
-Abrimos la terminal y generamos las claves.
+Abrimos Git Bash y generamos las claves.
 
 ### Para la VM
 
