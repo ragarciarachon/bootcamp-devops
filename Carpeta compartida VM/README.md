@@ -48,8 +48,8 @@ Antes de comenzar, asegúrate de tener:
 - **Nombre de la carpeta**: se rellena automáticamente cuando añades la ruta
 - **Mount point (opcional)**: ruta dentro de la VM (ej. ``/home/usuario/NombreCarpeta``)
 
-    > [!IMPORTANT]
-    > Si vas a usar una ruta personalizada, la carpeta debe existir previamente en la VM, de lo contrario el montaje puede fallar.
+> [!TIP]
+> Si vas a usar una ruta personalizada, la carpeta debe existir previamente en la VM, de lo contrario el montaje puede fallar.
 - **Opciones**:
   - ✅ Automontar: monta la carpeta automáticamente cada vez que inicia la VM.
   - ✅ Make Global: hace que la carpeta compartida esté disponible para todas las VMs de VirtualBox.
