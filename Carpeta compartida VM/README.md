@@ -52,7 +52,7 @@ Antes de comenzar, asegúrate de tener:
 > Si vas a usar una ruta personalizada, la carpeta debe existir previamente en la VM, de lo contrario el montaje puede fallar.
 - **Opciones**:
   - ✅ Automontar: monta la carpeta automáticamente cada vez que inicia la VM.
-  - ✅ Make Global: hace que la carpeta compartida esté disponible para todas las VMs de VirtualBox.
+  - ✅ Make Global (opcional): hace que la carpeta compartida esté disponible para todas las VMs de VirtualBox.
 
 <br>
 
