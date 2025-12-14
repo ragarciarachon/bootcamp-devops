@@ -11,7 +11,7 @@ Este tutorial explica cómo generar claves RSA, subirlas a un servidor (VM) y a 
 Este tutorial explica cómo generar claves RSA, subirlas a una VM y a GitHub, configurar `ssh-agent` para gestionarlas y usar un archivo `config` para simplificar las conexiones SSH.
 
 
-# Índice
+## 📚 Índice <!-- omit from toc -->
 
 - [0️⃣ Requisitos previos](#0️⃣-requisitos-previos)
 - [1️⃣ Conceptos básicos](#1️⃣-conceptos-básicos)
@@ -33,7 +33,7 @@ Este tutorial explica cómo generar claves RSA, subirlas a una VM y a GitHub, co
   - [Con GitHub](#con-github)
 - [7️⃣ Integración con Visual Studio](#7️⃣-integración-con-visual-studio)
 
-<br>
+---
 
 ## 0️⃣ Requisitos previos
 
@@ -61,6 +61,8 @@ Este tutorial explica cómo generar claves RSA, subirlas a una VM y a GitHub, co
 > Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
 > ```
 
+---
+
 ## 1️⃣ Conceptos básicos
 
 Antes de comenzar, conviene entender algunos conceptos:
@@ -76,6 +78,8 @@ Antes de comenzar, conviene entender algunos conceptos:
 - **Archivo `config` de SSH**: permite definir alias y asociar claves específicas a hosts, simplificando la conexión.
 
 - **Alias de host**: un nombre corto que usamos para referirnos a un host remoto (por ejemplo `mi-vm` en lugar de `usuario@ip`).
+
+---
 
 ## 2️⃣ Generar claves RSA
 
@@ -130,6 +134,8 @@ ssh-keygen -t rsa -b 4096 -f "$env:USERPROFILE\.ssh\id_rsa_github"
 ```
 
 <br>
+
+---
 
 ## 3️⃣ Subir la clave pública al servidor o servicio
 
@@ -187,6 +193,8 @@ ssh-copy-id -i ~/.ssh/id_rsa_vm.pub usuario@IP_DE_LA_VM
 
 3. Pegar la clave y guardar.
 
+---
+
 ## 4️⃣ Configurar ssh-agent
 
 > [!IMPORTANT]
@@ -220,6 +228,8 @@ Salida esperada:
 ```
 
 Con `ssh-agent` puedes gestionar varias claves y SSH seleccionará la correcta según el host.
+
+---
 
 ## 5️⃣ Crear el archivo de configuración config
 
@@ -256,7 +266,8 @@ Host github.com
 - `IdentityFile` → ruta de la clave privada a usar
 
 - `IdentitiesOnly yes` → fuerza a SSH a usar solo la clave indicada
--
+
+---
 
 ## 6️⃣ Probar las conexiones
 
@@ -278,6 +289,8 @@ Salida esperada en GitHub:
 Hi USERNAME! You've successfully authenticated...
 ```
 
+---
+
 ## 7️⃣ Integración con Visual Studio
 
 - Visual Studio usa el SSH integrado de Windows.
@@ -287,3 +300,5 @@ Hi USERNAME! You've successfully authenticated...
   - ✓ No pedirá passphrase
   - ✓ Funcionará Git con SSH
   - ✓ No importa si cierras PowerShell o Git Bash
+
+---
