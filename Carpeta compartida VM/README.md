@@ -38,9 +38,10 @@ Antes de comenzar, asegúrate de tener:
 
 ## Crear carpeta compartida (desde el *host*)
 
-1. Apaga la VM
-2. En VirtualBox, selecciona la ``VM → Configuración → Carpetas compartidas``
-3. Haz clic en ``Añadir nueva carpeta``
+1. Crea una carpeta en Windows que quieras compartir con la VM (ej. C:\Users\Usuario\NombreCarpeta).
+2. Apaga la VM
+3. En VirtualBox, selecciona la ``VM → Configuración → Carpetas compartidas``
+4. Haz clic en ``Añadir nueva carpeta`` (icono de carpeta con un +)
 
 #### Opciones recomendadas
 
@@ -50,6 +51,7 @@ Antes de comenzar, asegúrate de tener:
 
 > [!TIP]
 > Si vas a usar una ruta personalizada, la carpeta debe existir previamente en la VM, de lo contrario el montaje puede fallar.
+
 - **Opciones**:
   - ✅ Automontar: monta la carpeta automáticamente cada vez que inicia la VM.
   - ✅ Make Global (opcional): hace que la carpeta compartida esté disponible para todas las VMs de VirtualBox.
