@@ -50,7 +50,7 @@ Antes de comenzar, asegúrate de tener:
 - **Mount point (opcional)**: ruta dentro de la VM (ej. ``/home/usuario/NombreCarpeta``)
 
 > [!TIP]
-> Si vas a usar una ruta personalizada, la carpeta debe existir previamente en la VM, de lo contrario el montaje puede fallar.
+> Se recomienda utilizar una ruta dentro del directorio personal del usuario (/home/usuario/) para evitar problemas de acceso por permisos en los directorios superiores.
 
 - **Opciones**:
   - ✅ Automontar: monta la carpeta automáticamente cada vez que inicia la VM.
